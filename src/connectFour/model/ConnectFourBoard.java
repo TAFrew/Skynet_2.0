@@ -79,9 +79,9 @@ public class ConnectFourBoard {
 	}
 
 	private boolean playerHasWon(String player) {
-		// TODO Auto-generated method stub
 
-		// perhaos have input of four to check for win, (four in a row) cna then use input of three, to see if can win next turn
+		// if at any point out of range, return false for win
+		//TODO perhaps have input of four to check for win, (four in a row) cna then use input of three, to see if can win next turn
 
 		// Horizontal
 		// for rows = all
@@ -106,7 +106,7 @@ public class ConnectFourBoard {
 				}
 			}
 		}
-		
+
 		// Diagonal
 		// for all sqs
 		// if sq , +1,+1,+2,+2,+3,+3 selected, player wins 
@@ -114,15 +114,34 @@ public class ConnectFourBoard {
 		for(Square s : _squares){
 			int row = s.getX();
 			int col = s.getY();
-			if(s.filledBy().equals(player) && getSquare(row, col).filledBy().equals(player) && s.filledBy().equals(player) && s.filledBy().equals(player)){
-				
+
+			boolean posGradient = true;
+			boolean negGradient = true;
+			for(int i = 0; i < 4; i++){
+				try{
+					if(!(getSquare(row + i, col + i).filledBy().equals(player))){
+						posGradient = false;
+					}
+				}
+				catch(IndexOutOfBoundsException e){
+					// not win in this square
+					posGradient = false;
+				}
+				try{
+					if(!(getSquare(row - i, col + i).filledBy().equals(player))){
+						negGradient = false;
+					}
+				}
+				catch(IndexOutOfBoundsException e){
+					// not win in this square
+					negGradient = false;
+				}
 			}
-			/*catch(IndexOutOfBoundsException e){
-				// not win in this square
-			}*/
+			if(posGradient || negGradient){
+				return true;
+			}
 		}
-		
-		// if at any point out of range, return false for win
+
 
 
 
