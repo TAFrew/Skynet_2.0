@@ -157,83 +157,11 @@ public class ConnectFourBoard {
 		return null;
 	}
 
-	private ArrayList<Square> getRow(int i) {
-		ArrayList<Square> squares = new ArrayList<>();
-		for(Square s : _squares){
-			if(s.isInRow(i)){
-				squares.add(s);
-			}
-		}
-		return squares;
-	}
-
-	private ArrayList<Square> getCol(int i) {
-		ArrayList<Square> squares = new ArrayList<>();
-
-		for(Square s : _squares){
-			if(s.isInColumn(i)){
-				squares.add(s);
-			}
-		}
-
-		return squares;
-	}
-
-	private ArrayList<Square> getDiag(int i) {
-		ArrayList<Square> squares = new ArrayList<>();
-
-		if(i == 0){
-			for(Square s: _squares){
-				if(s.isInRow(0) && s.isInColumn(0)){
-					squares.add(s);
-				}
-				if(s.isInRow(1) && s.isInColumn(1)){
-					squares.add(s);
-				}
-				if(s.isInRow(2) && s.isInColumn(2)){
-					squares.add(s);
-				}
-			}
-		}
-		else if(i == 1){
-			for(Square s: _squares){
-				if(s.isInRow(0) && s.isInColumn(2)){
-					squares.add(s);
-				}
-				if(s.isInRow(1) && s.isInColumn(1)){
-					squares.add(s);
-				}
-				if(s.isInRow(2) && s.isInColumn(0)){
-					squares.add(s);
-				}
-			}
-
-		}
-
-		return squares;
-	}
-
-	private boolean isSelectedByPlayerOne(ArrayList<Square> squares) {
-		for(Square s : squares){
-			if(!(s.filledBy().equals("Player One"))){
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean isSelectedByPlayerTwo(ArrayList<Square> squares) {
-		for(Square s : squares){
-			if(!(s.filledBy().equals("Player Two"))){
-				return false;
-			}
-		}
-		return true;
-	}
-
 	public void endGame() {
-		for(Square s : _possibleSquares){
-			s.setAsFilled("Nobody");
+		for(Square s : _squares){
+			if(!(s.isFilled())){
+				s.setAsFilled("Nobody");
+			}
 		}
 	}
 
