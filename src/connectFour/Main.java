@@ -1,23 +1,16 @@
 package connectFour;
 
-import java.util.ArrayList;
-
 import connectFour.gui.GUIConnectFourBoard;
 import connectFour.history.Game;
 import connectFour.history.Move;
 import connectFour.history.GameHistory;
 import connectFour.model.ConnectFourBoard;
-import connectFour.model.Square;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Main extends Application{
@@ -51,6 +44,10 @@ public class Main extends Application{
 			@Override
 			public void handle(Event event) {
 				//handleMouseClick(event);
+				// TODO this is just a test
+				_board.getSquares().get(0).setAsFilled("P1");
+				_board.getSquares().get(1).setAsFilled("P2");
+				_GUI.update();
 			}
 		});
 
