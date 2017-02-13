@@ -5,12 +5,14 @@ import connectFour.history.Game;
 import connectFour.history.Move;
 import connectFour.history.GameHistory;
 import connectFour.model.ConnectFourBoard;
+import connectFour.model.Square;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application{
@@ -25,7 +27,7 @@ public class Main extends Application{
 	private Stage _stage;
 	private AnimationTimer _timer;
 
-	private boolean _playersTurn = false;
+	private boolean _playersTurn = true;
 	private int _turn = 1;
 
 	public static void main(String[] args) {
@@ -37,17 +39,17 @@ public class Main extends Application{
 		initialize();
 
 		_GUI = new GUIConnectFourBoard(_board);
-		
+
 		Scene scene = new Scene(_GUI.getPane());
 		scene.setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
 			public void handle(Event event) {
-				//handleMouseClick(event);
-				// TODO this is just a test
-				_board.getSquares().get(0).setAsFilled("P1");
-				_board.getSquares().get(1).setAsFilled("P2");
+				handleMouseClick(event);
 				_GUI.update();
+				// TODO this is just a test
+				//_board.getSquares().get(0).setAsFilled("P1");
+				//_board.getSquares().get(1).setAsFilled("P2");
 			}
 		});
 
@@ -63,7 +65,7 @@ public class Main extends Application{
 			public void handle(long now) {
 
 				if(!(_playersTurn)){
-					//AITurn();
+					AITurn();
 				}
 			}
 		};
@@ -247,84 +249,71 @@ public class Main extends Application{
 			// TODO end GUI too
 			_stage.close();
 		}
+	}*/
+
+	protected void AITurn() {
+		Square toGo = _board.getPossibleMoves().get(0);
+		// set square as filled
+		String player = "";
+		if(_turn % 2 == 0){
+			player = "P2";
+			toGo.setAsFilled("P2");
+		}
+		else{
+			player = "P1";
+			toGo.setAsFilled("P1");
+		}
+
+		// store move
+		_game.addMove(new Move(toGo, player, _turn));
+
+		// remove from possible squares
+		_board.updatePossibleMoves();
+
+		// increment move number
+		_turn++;
+
+		_playersTurn = true;
+		
+		_GUI.update();
 	}
 
 	//TODO put this in GUI class
 	protected void handleMouseClick(Event event) {
-		// TODO
 		if(_playersTurn){
 			MouseEvent me = (MouseEvent) event;
 			double horizontal = me.getSceneX();
 			double vertical = me.getSceneY();
 
-			Integer num = -1;
-
-			// first row
-			Rectangle r = new Rectangle();
-			if(horizontal <= 200 && vertical <= 200){
-				r = (Rectangle)_squares.get(0);
-				num = 0;
+			int count = 0;
+			int finalCount = -1;
+			for(int y = 5; y >= 0; y--){
+				for(int x = 1; x < 8; x++){
+					if(horizontal <= x * 100 && vertical >= y * 100){
+						if(finalCount == -1){
+							finalCount = count;
+						}
+					}
+					count++;
+				}
 			}
 
-			else if(horizontal <= 400 && vertical <= 200){
-				r = (Rectangle)_squares.get(1);
-				num = 1;
-			}
+			Square s = _board.getSquares().get(finalCount);
 
-			else if(horizontal <= 600 && vertical <= 200){
-				r = (Rectangle)_squares.get(2);
-				num = 2;
-			}
-
-			else if(horizontal <= 200 && vertical <= 400){
-				r = (Rectangle)_squares.get(3);
-				num = 3;
-			}
-
-			else if(horizontal <= 400 && vertical <= 400){
-				r = (Rectangle)_squares.get(4);
-				num = 4;
-			}
-
-			else if(horizontal <= 600 && vertical <= 400){
-				r = (Rectangle)_squares.get(5);
-				num = 5;
-			}
-
-			// third row
-			else if(horizontal <= 200 && vertical <= 600){
-				r = (Rectangle)_squares.get(6);
-				num = 6;
-			}
-
-			else if(horizontal <= 400 && vertical <= 600){
-				r = (Rectangle)_squares.get(7);
-				num = 7;
-			}
-
-			else if(horizontal <= 600 && vertical <= 600){
-				r = (Rectangle)_squares.get(8);
-				num = 8;
-			}
-			if(r.getFill().equals(Color.WHITE)){
-				// show where player has gone
-				r.setFill(Color.RED);
-
-				// store whether player went first or second
+			if(_board.getPossibleMoves().contains(s)){
 				// set square as filled
-				Square square = _board.getSquares().get(num);
 				String player = "";
-				if(_turn % 2 == 1){
-					player = "playerOne";
-					square.setAsFilled("Player One");
+				if(_turn % 2 == 0){
+					player = "P2";
+					s.setAsFilled("P2");
 				}
 				else{
-					player = "playerTwo";
-					square.setAsFilled("Player Two");
+					player = "P1";
+					s.setAsFilled("P1");
 				}
 
 				// store move
-				_game.addMove(new Move(square, player, _turn));
+				_game.addMove(new Move(s, player, _turn));
 
 				// remove from possible squares
 				_board.updatePossibleMoves();
@@ -332,31 +321,35 @@ public class Main extends Application{
 				// increment move number
 				_turn++;
 
-				// check if someone has won
-				if(_board.getResult().equals("Player 1 Won") || _board.getResult().equals("Player 2 Won") || _turn > 9){
-					_board.endGame();
-					// get result of game
-					String result = _board.getResult();
-
-					// set result
-					_game.setResult(result);
-
-					// record game
-					_history.addGame(_game);
-
-					// write history to file
-					FileManipulator.writeHistoryTofile(_history, _file);
-
-					// TODO end GUI too
-					_stage.close();
-				}
-
 				_playersTurn = false;
+
+				//checkResult();
 			}
 		}
 
 	}
-*/
+
+	private void checkResult(){
+		// check if someone has won
+		if(_board.getResult().equals("Player 1 Won") || _board.getResult().equals("Player 2 Won") || _turn > 9){
+			_board.endGame();
+			// get result of game
+			String result = _board.getResult();
+
+			// set result
+			_game.setResult(result);
+
+			// record game
+			_history.addGame(_game);
+
+			// write history to file
+			FileManipulator.writeHistoryTofile(_history, _file);
+
+			// TODO end GUI too
+			_stage.close();
+		}
+	}
+
 	private void initialize() {
 		//_history = FileManipulator.readHistoryFromFile(_file);
 		_board = new ConnectFourBoard();

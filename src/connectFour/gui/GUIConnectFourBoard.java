@@ -2,14 +2,12 @@ package connectFour.gui;
 
 import java.util.ArrayList;
 
-import connectFour.history.Game;
 import connectFour.model.ConnectFourBoard;
 import connectFour.model.Square;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 
 public class GUIConnectFourBoard {
 	private ConnectFourBoard _board;
@@ -49,7 +47,6 @@ public class GUIConnectFourBoard {
 		Rectangle rect = new Rectangle(700,600, Color.GREY);
 		_gamePane.getChildren().add(rect);
 
-		// TODO needs to be 6x7 not 3x3
 		for(int y = 6; y > 0; y--){
 			for(int x = 0; x < 7; x++){
 				_squares.add(createEntity(x*100 + 10, y*100 - 90, 80, 80, Color.WHITE));

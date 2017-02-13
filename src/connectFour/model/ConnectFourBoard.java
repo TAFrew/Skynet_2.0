@@ -10,8 +10,8 @@ public class ConnectFourBoard {
 	public ConnectFourBoard(){
 		_squares = new ArrayList<>();
 
-		for(int cols = 0; cols < 7; cols++){
-			for(int rows = 0; rows < 6; rows++){
+		for(int rows = 0; rows < 6; rows++){
+			for(int cols = 0; cols < 7; cols++){
 				_squares.add(new Square(rows, cols));
 			}
 		}
@@ -48,7 +48,8 @@ public class ConnectFourBoard {
 				}
 				else{
 					toRemove.add(s);
-					toAdd.add(getNextSquare(s));
+					Square nextUp = getSquare(s.getX() + 1, s.getY());
+					toAdd.add(nextUp);
 				}
 			}
 		}
@@ -81,7 +82,7 @@ public class ConnectFourBoard {
 	private boolean playerHasWon(String player) {
 
 		// if at any point out of range, return false for win
-		//TODO perhaps have input of four to check for win, (four in a row) cna then use input of three, to see if can win next turn
+		//TODO perhaps have input of four to check for win, (four in a row) can then use input of three, to see if can win next turn
 
 		// Horizontal
 		// for rows = all
@@ -111,6 +112,7 @@ public class ConnectFourBoard {
 		// for all sqs
 		// if sq , +1,+1,+2,+2,+3,+3 selected, player wins 
 		// or if sq , -1,+1,-2,+2,-3,+3 selected, player wins 
+		// TODO here Tim
 		for(Square s : _squares){
 			int row = s.getX();
 			int col = s.getY();
@@ -133,6 +135,10 @@ public class ConnectFourBoard {
 					}
 				}
 				catch(IndexOutOfBoundsException e){
+					// not win in this square
+					negGradient = false;
+				}
+				catch(NullPointerException e){
 					// not win in this square
 					negGradient = false;
 				}
