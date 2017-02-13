@@ -171,86 +171,7 @@ public class Main extends Application{
 			_playersTurn = true;
 		}
 	}
-
-	// TODO put this in GUI class
-	private int showAITurn(Square toGo){
-		Integer num = -1;
-
-		// first row
-		Rectangle r = new Rectangle();
-		if(toGo.toString().equals("0,0")){
-			r = (Rectangle)_squares.get(0);
-			num = 0;
-		}
-
-		else if(toGo.toString().equals("0,1")){
-			r = (Rectangle)_squares.get(1);
-			num = 1;
-		}
-
-		else if(toGo.toString().equals("0,2")){
-			r = (Rectangle)_squares.get(2);
-			num = 2;
-		}
-
-		else if(toGo.toString().equals("1,0")){
-			r = (Rectangle)_squares.get(3);
-			num = 3;
-		}
-
-		else if(toGo.toString().equals("1,1")){
-			r = (Rectangle)_squares.get(4);
-			num = 4;
-		}
-
-		else if(toGo.toString().equals("1,2")){
-			r = (Rectangle)_squares.get(5);
-			num = 5;
-		}
-
-		// third row
-		else if(toGo.toString().equals("2,0")){
-			r = (Rectangle)_squares.get(6);
-			num = 6;
-		}
-
-		else if(toGo.toString().equals("2,1")){
-			r = (Rectangle)_squares.get(7);
-			num = 7;
-		}
-
-		else if(toGo.toString().equals("2,2")){
-			r = (Rectangle)_squares.get(8);
-			num = 8;
-		}
-
-		// show AI move
-		r.setFill(Color.BLUE);
-
-		return num;
-	}
-
-	private void handleGameEnd(){
-		// check if someone has won
-		if(_board.getResult().equals("Player 1 Won") || _board.getResult().equals("Player 2 Won") || _turn > 9){
-			_board.endGame();
-			// get result of game
-			String result = _board.getResult();
-
-			// set result
-			_game.setResult(result);
-
-			// record game
-			_history.addGame(_game);
-
-			// write history to file
-			FileManipulator.writeHistoryTofile(_history, _file);
-
-			// TODO end GUI too
-			_stage.close();
-		}
-	}*/
-
+*/
 	protected void AITurn() {
 		Square toGo = _board.getPossibleMoves().get(0);
 		// set square as filled
@@ -276,6 +197,8 @@ public class Main extends Application{
 		_playersTurn = true;
 		
 		_GUI.update();
+		
+		checkResult();
 	}
 
 	//TODO put this in GUI class
@@ -323,7 +246,7 @@ public class Main extends Application{
 
 				_playersTurn = false;
 
-				//checkResult();
+				checkResult();
 			}
 		}
 
@@ -331,7 +254,7 @@ public class Main extends Application{
 
 	private void checkResult(){
 		// check if someone has won
-		if(_board.getResult().equals("Player 1 Won") || _board.getResult().equals("Player 2 Won") || _turn > 9){
+		if(_board.getResult().equals("P1W") || _board.getResult().equals("P2W") || _turn > 9){
 			_board.endGame();
 			// get result of game
 			String result = _board.getResult();
@@ -351,7 +274,8 @@ public class Main extends Application{
 	}
 
 	private void initialize() {
-		//_history = FileManipulator.readHistoryFromFile(_file);
+		_history = FileManipulator.readHistoryFromFile(_file);
+		//_history = new GameHistory();
 		_board = new ConnectFourBoard();
 		_game = new Game();
 	}

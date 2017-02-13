@@ -68,17 +68,18 @@ public class ConnectFourBoard {
 	}
 
 	public String getResult() {
-		if(playerHasWon("Player One")){
-			return "Player 1 Won";
+		if(playerHasWon("P1")){
+			return "P1W";
 		}
-		else if(playerHasWon("Player Two")){
-			return "Player 2 Won";
+		else if(playerHasWon("P2")){
+			return "P2W";
 		}
 		else{
 			return "Draw";
 		}
 	}
 
+	//TODO this breaks
 	private boolean playerHasWon(String player) {
 
 		// if at any point out of range, return false for win
@@ -96,7 +97,7 @@ public class ConnectFourBoard {
 			}
 		}
 
-		// Vetical
+		// Vertical
 		// for cols = all
 		// for rows = 0 -> 2
 		// if sq[rows] , rows +1 rows +2 and rows +3 are selected by player, they have won
@@ -121,7 +122,12 @@ public class ConnectFourBoard {
 			boolean negGradient = true;
 			for(int i = 0; i < 4; i++){
 				try{
-					if(!(getSquare(row + i, col + i).filledBy().equals(player))){
+					if(row + i < 6 && col + i < 7){
+						if(!(getSquare(row + i, col + i).filledBy().equals(player))){
+							posGradient = false;
+						}
+					}
+					else{
 						posGradient = false;
 					}
 				}
@@ -130,7 +136,12 @@ public class ConnectFourBoard {
 					posGradient = false;
 				}
 				try{
-					if(!(getSquare(row - i, col + i).filledBy().equals(player))){
+					if(row > 0){
+						if(!(getSquare(row - i, col + i).filledBy().equals(player))){
+							negGradient = false;
+						}
+					}
+					else{
 						negGradient = false;
 					}
 				}
