@@ -173,18 +173,33 @@ public class Main extends Application{
 	}
 */
 	protected void AITurn() {
-		Square toGo = _board.getPossibleMoves().get(0);
-		// set square as filled
+		// set player identity
 		String player = "";
+		String opponent = "";
 		if(_turn % 2 == 0){
 			player = "P2";
-			toGo.setAsFilled("P2");
+			opponent = "P1";
 		}
 		else{
 			player = "P1";
-			toGo.setAsFilled("P1");
+			opponent = "P2";
+		}
+		
+		// if AI can win, then do it
+		Square toGo = _board.playerCanWin(player);
+		
+		// if player can win, stop them
+		if(toGo == null){
+			toGo = _board.playerCanWin(opponent);
+		}
+		// else go randomly for now
+		if(toGo == null){
+			toGo = _board.getPossibleMoves().get(0);
 		}
 
+		// set square as filled
+		toGo.setAsFilled(player);
+		
 		// store move
 		_game.addMove(new Move(toGo, player, _turn));
 
@@ -254,7 +269,7 @@ public class Main extends Application{
 
 	private void checkResult(){
 		// check if someone has won
-		if(_board.getResult().equals("P1W") || _board.getResult().equals("P2W") || _turn > 9){
+		if(_board.getResult().equals("P1W") || _board.getResult().equals("P2W")){
 			_board.endGame();
 			// get result of game
 			String result = _board.getResult();

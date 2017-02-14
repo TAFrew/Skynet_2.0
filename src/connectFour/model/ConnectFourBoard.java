@@ -79,7 +79,156 @@ public class ConnectFourBoard {
 		}
 	}
 
-	//TODO this breaks
+	/**
+	 * This method will check whether a given player can win in their next turn.
+	 * It will call the playerHasLine(int num) method with an input of 3 (ie one move from winning) and then will check
+	 * if it is possible to go in the given square
+	 * @param player
+	 * @return : the square where the player can win
+	 */
+	public Square playerCanWin(String player){
+		Square s = playerHasLine(player, 3);
+		return s;
+	}
+
+	private Square playerHasLine(String player, int length){
+		// for every square
+		for(Square s : _squares){
+			// get coordinates
+			int row = s.getX();
+			int col = s.getY();
+
+			// set booleans of lines
+			boolean posGradient = true;
+			boolean negGradient = true;
+			boolean horizontalLeft = true;
+			boolean horizontalRight = true;
+			boolean vertical = true;
+			
+			// for length of line you are checking
+			for(int i = 0; i < length; i++){
+				// check positive gradient diagonal
+				try{
+					if(row + i < 6 && col + i < 7){
+						if(!(getSquare(row + i, col + i).filledBy().equals(player))){
+							posGradient = false;
+						}
+					}
+					else{
+						posGradient = false;
+					}
+				}
+				catch(IndexOutOfBoundsException e){
+					// not win in this square
+					posGradient = false;
+				}
+				
+				// check negative gradient diagonal
+				try{
+					if(row > 0){
+						if(!(getSquare(row - i, col + i).filledBy().equals(player))){
+							negGradient = false;
+						}
+					}
+					else{
+						negGradient = false;
+					}
+				}
+				catch(IndexOutOfBoundsException e){
+					// not win in this square
+					negGradient = false;
+				}
+				catch(NullPointerException e){
+					// not win in this square
+					negGradient = false;
+				}
+
+				// check horizontal left
+				try{
+					if(col - i >= 0){
+						if(!(getSquare(row, col - i).filledBy().equals(player))){
+							horizontalLeft = false;
+						}
+					}
+					else{
+						horizontalLeft = false;
+					}
+				}
+				catch(IndexOutOfBoundsException e){
+					// not win in this square
+					horizontalLeft = false;
+				}
+				
+				// check horizontal right
+				try{
+					if(col + i < 7){
+						if(!(getSquare(row, col + i).filledBy().equals(player))){
+							horizontalRight = false;
+						}
+					}
+					else{
+						horizontalRight = false;
+					}
+				}
+				catch(IndexOutOfBoundsException e){
+					// not win in this square
+					horizontalRight = false;
+				}
+				
+				// check vertical
+				try{
+					if(row + i < 6){
+						if(!(getSquare(row + i, col).filledBy().equals(player))){
+							vertical = false;
+						}
+					}
+					else{
+						vertical = false;
+					}
+				}
+				catch(IndexOutOfBoundsException e){
+					// not win in this square
+					vertical = false;
+				}
+			}
+			
+			if(posGradient){
+				Square toGo = getSquare(s.getX() + length, s.getY() + length);
+				if(_possibleSquares.contains(toGo)){
+					return toGo;
+				}
+			}
+			else if(negGradient){
+				Square toGo = getSquare(s.getX() + length, s.getY() - length);
+				if(_possibleSquares.contains(toGo)){
+					return toGo;
+				}
+			}
+			else if(horizontalLeft){
+				Square toGo = getSquare(s.getX(), s.getY() - length);
+				if(_possibleSquares.contains(toGo)){
+					return toGo;
+				}
+			}
+			else if(horizontalRight){
+				Square toGo = getSquare(s.getX(), s.getY() + length);
+				if(_possibleSquares.contains(toGo)){
+					return toGo;
+				}
+			}
+			else if(vertical){
+				Square toGo = getSquare(s.getX() + length, s.getY());
+				if(_possibleSquares.contains(toGo)){
+					return toGo;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	// possibly change this to return a square? Actually probably have it call the playerHasLine method	with 4 and if it
+	// returns null say false else say true
 	private boolean playerHasWon(String player) {
 
 		// if at any point out of range, return false for win
