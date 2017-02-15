@@ -3,6 +3,7 @@ package connectFour.model;
 import java.io.Serializable;
 
 public class Square implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private int _xLocation;
 	private int _yLocation;
 
